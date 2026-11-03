@@ -1,0 +1,50 @@
+% Cover letter template, restyled 2026-09-25.
+% LAYOUT is the letter's own: left-aligned letterhead, name over the icon contact line, no tagline (his ruling 2026-10-15),
+% 2.5cm margins, no banner, no photo.
+% STYLE comes from the CV: the class supplies Calibri, the 10pt body, the 1.06
+% leading, the primary/darktext/lighttext colours and the ban on bold, so the
+% packet reads as one hand. No design value is restated here.
+%
+% ENGINE: lualatex, twice. pdflatex cannot load Calibri.
+% ASSETS: bmsnkresume.cls must sit beside the .tex (output/ already carries it).
+% MARKET: India letters swap the contact line for candidate.contact_india
+%         (+91 9986093799), matching the paired CV.
+\documentclass{bmsnkresume}
+\usepackage{amsmath}
+\usepackage{fontawesome}
+
+% The letter keeps its own page, wider margins than the CV's two-column grid.
+\geometry{a4paper, margin=2.5cm}
+
+% Body size, his directive 2026-09-25: one point above the CV's 10pt. Prose at a
+% 2.5cm measure carries a larger size than the CV's two-column entries. The
+% class leading (1.06) still multiplies this baseline.
+\changefontsize[13.2pt]{11pt}
+
+\newcommand{\letterhead}{%
+  \begin{flushleft}
+    {\fontsize{17}{20}\selectfont\cvemphsize\color{primary}Shashank Birur Manjunatha}\\[0.35em]
+    {\fontsize{11}{13.2}\selectfont\color{darktext}{\faEnvelopeO}~shashankbmanjunatha@gmail.com \quad {\faMobile}~+49 17685648702}
+  \end{flushleft}
+  \vspace{-0.6em}%
+  \noindent{\color{lighttext}\rule{\linewidth}{0.3pt}}%
+  \par\vspace{1.2em}\noindent%
+}
+
+\begin{document}
+
+\letterhead
+Dear Hiring Team,\\
+\\
+My name is Shashank, and I am interested in the xx position at xx. I recently graduated from the University of Stuttgart, with a Master's degree, specializing in Embedded systems engineering and I am eager xx \\
+\\
+During my xx.\\
+\\
+Joining xx. I greatly appreciate you taking the time to consider my application and I look forward to the opportunity to speak with you further regarding how I can contribute to xx\\
+\\
+Shashank Birur Manjunatha
+% Mit freundlichen Gruessen, \\
+% \includegraphics[width=5cm]{signature.png} \\
+% \hspace{5 cm}(Shashank Birur Manjunatha)\\
+% \textit{\today, Stuttgart}
+\end{document}

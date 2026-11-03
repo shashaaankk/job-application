@@ -1,0 +1,12 @@
+{
+  "types": {
+    "aliases": "aliases",
+    "cssclasses": "multitext",
+    "tags": "tags",
+    "Date": "date",
+    "status": "checkbox",
+    "Applied": "checkbox",
+    "Score": "number",
+    "Date (Discovery date)": "date"
+  }
+}

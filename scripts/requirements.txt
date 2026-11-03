@@ -1,0 +1,23 @@
+# Python 3.12.3, installed into .venv
+#   .venv/bin/pip install -r requirements.txt
+#
+# Playwright's browser download step is deliberately NOT run. Every script
+# opens the persistent profile with channel="chrome", which uses the system
+# Google Chrome at /usr/bin/google-chrome. See 03. playwright setup in the
+# vault, rule 1, one browser binary per profile.
+#
+# Everything else the scripts import is in the standard library: argparse,
+# asyncio, csv, datetime, functools, pathlib, random, re, sys, time and
+# urllib.parse. queries.yaml is matched with a regex rather than parsed, so
+# there is no YAML dependency.
+
+# Direct
+playwright==1.63.0
+
+# Resolved by playwright, pinned so the environment is reproducible
+greenlet==3.5.6
+pyee==13.0.1
+typing_extensions==4.16.0
+
+# Reads queries.yaml, the matrix the sweep executes
+PyYAML==6.0.2

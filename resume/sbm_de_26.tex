@@ -1,0 +1,149 @@
+\documentclass{bmsnkresume}
+\usepackage{amsmath}
+
+\name{SHASHANK BIRUR MANJUNATHA}
+\professional{Embedded Software Engineer}
+\contact{Email: \href{mailto:shashankbmanjunatha@gmail.com}{shashankbmanjunatha@gmail.com} | Phone: +49 17685648702 | Location: Stuttgart, DE}
+\socials{GitHub: \href{https://github.com/shashaaankk}{/shashaaankk} | LinkedIn: \href{https://www.linkedin.com/in/shashank-birur-manjunatha-367061104}{/shashank-birur-manjunatha-367061104}}
+\photo{potrait00.png}
+
+\begin{document}
+
+\newcommand{\columnsectiontitle}[1]{%
+  {\cvemphsize\color{darktext}\MakeUppercase{#1}}\par
+  \noindent{\color{lighttext}\rule{\linewidth}{0.2pt}}%
+  \vspace{0.2em}%
+}
+
+% Define academicsitems environment
+\newenvironment{academicsitems}{\begin{itemize}}{\end{itemize}}
+
+
+\makeheader
+
+\sectiontitle{Professional Experience}
+
+\experience
+  {Robert  Bosch  Gesellschaft  für  medizinische  Forschung  mbH}
+  {BMT, University of Stuttgart, Germany}
+  {Research Assistant - Segmentation}
+  {March 2026 - Present}
+\begin{itemize}
+  \item Developing automated liver vessel segmentation from contrast CT for interventional planning, combining pretrained foundation models with topology-aware post-processing
+  \item Fine-tuning a vessel segmentation foundation model (vesselFM) on public liver CT datasets
+\end{itemize}
+\vspace{-0.6em}
+
+\experience
+  {Valeo Schalter und Sensoren GmbH}
+  {Bietigheim-Bissingen, Germany}
+  {Working Student - Driver Intention Determination}
+  {Jul 2024 - Dec 2024}
+\begin{itemize}
+  \item Studied driver acceptance of L2 lane keeping. Identified trust and takeover delay as common pain points 
+  \item Traced pain points to plausible scenarios in the requirements. Designed test scenarios, data acquisition strategies and developed Qt-tools for driver studies on test tracks and simulators
+  \item Processed raw CAN traces from drives into training data and built a Hidden Markov Model that classifies lane departures as intended or unintended from vehicle dynamics signals alone at 68\% precision, without driver monitoring hardware
+\end{itemize}
+\vspace{-0.6em}
+
+\experience
+  {Continental Autonomous Mobility (India) Pvt. Ltd.}
+  {Bengaluru, India}
+  {Engineer - Vehicle Dynamics}
+  {Oct 2021 - Sep 2023}
+\begin{itemize}
+  \item Developed and shipped C++ algorithms for steering angle offset, lateral acceleration estimation, and velocity correction
+  \item Delivered ASPICE SWE.3/SWE.4 compliance for the module, including detailed design, state behavior documentation, and unit tests, achieving 95\%+ branch and MC/DC coverage
+  \item Validated software via SIL benchmarking and on-target processor-in-the-loop testing with CANoe and Trace32; adapted component interfaces for backward compatibility with legacy recordings
+  \item Prototyped radar-based lateral velocity correction using forward Doppler radar and IMU motion compensation
+  % \item Performed root-cause analysis of failed black-box test scenarios and automated their acceptance tests
+\end{itemize}
+\vspace{-0.6em}
+
+  \sectiontitle{Education}
+  \educationentry
+    {M.Sc. Information Technology (Embedded Systems Engineering)}
+    {University of Stuttgart, Germany}
+    {Oct 2023 - Sep 2026}
+    {GPA: 1.8}
+    {}
+
+  \educationentry
+    {Certificate of Advanced Studies in Artificial Intelligence}
+    {Artificial Intelligence Software Academy, University of Stuttgart}
+    {Feb 2025 - Aug 2025}
+    {}
+    {}
+
+  \educationentry
+    {B.E Electronics \& Communication Engineering}
+    {P.E.S College of Engineering (Affiliated to VTU), Mandya}
+    {Aug 2017 - July 2021}
+    {GPA: 1.5}
+    {}
+
+\vspace{-0.5em}
+\sectiontitle{ Skills}
+\vspace{0.2em}
+
+{\color{darktext} Technical: C/C++, Python, MATLAB/Simulink, Qt (QML), FreeRTOS, ROS2, Linux, CAN, TensorRT, NVIDIA Jetson\par}
+{\color{darktext} Tools \& Process: CMake, GTest, PyTest, Docker, GitHub Actions, CANoe, Trace32, IBM DOORS, Jira, Confluence, ASPICE, Scrum\par}
+{\color{darktext} Languages: English (C1), German (A2), Kannada (Native), Hindi (Fluent)\par}
+
+\sectiontitle{Master Thesis}
+\academicsentry
+  {Risk-Aware Autonomy: An Edge Framework for Operational Risk Assessment}
+  {Nov 2025 - May 2026}
+  {}
+  {Institute of Automation Technology and Software Systems, University of Stuttgart}
+\begin{academicsitems}
+  \item Built scene graphs with YOLO-E and BoT-SORT on an NVIDIA Jetson over ROS2 for open-world navigation planning
+  \item Implemented a hybrid RAG pipeline with Neo4j KG and vector databases to assess operational risk at the edge
+  \item Benchmarked LLM throughput across scales and architectures, backends (TensorRT-LLM, vLLM, and llama.cpp) on Jetson AGX Orin and Thor 
+  \item Identified memory bandwidth bottlenecks to be the limiting factors for real-time Operational Risk Assessment
+\end{academicsitems}
+
+\newpage
+
+\sectiontitle{Projects}
+\vspace{0.65em}
+\projectentry
+  {Ball-Balancing Robot to Demonstrate the Effects of 5G Delay in Networked Control Systems}
+  {C++, ESP32, FreeRTOS, UDP, Python}
+\begin{itemize}
+  \item Built a distributed robot control system on ESP32/FreeRTOS nodes with inter-process and network communication over UDP sockets between sensor, compute, and actuator nodes on a custom parallel manipulator
+  \item Developed system-level C++ firmware for the sensing and actuation control loops, scheduled at 2 ms and 4 ms periods
+  \item Measured end-to-end latency via packet timestamping under emulated packet loss and jitter; control held through 10 ms of added delay and broke down by 20 ms
+\end{itemize}
+\vspace{0.37em}
+
+\projectentry
+  {Autonomous Chess-Playing Robot Arms in Simulation}
+  {Python, MuJoCo, PyTorch, NVIDIA NIM (Llama 3.2), NumPy}
+\begin{itemize}
+  \item Built a perceive-decide-act loop in which two ViperX 6-DoF arms play chess against each other in MuJoCo, from overhead camera perception to pick-and-place manipulation
+  \item Trained a 13-class CNN piece classifier on procedurally generated single-piece renders to 99.6\% test accuracy, then fine-tuned it on crowded scenes with exact labels by construction, which removed full-board misreads
+  \item Derived closed-form inverse kinematics and checked it against MuJoCo forward kinematics, and made grasping reliable through convex mesh decomposition with CoACD, measured gripper jaw geometry, and tuned contact damping
+  \item Integrated an LLM move engine through NVIDIA NIM by serializing perception output to a board-state JSON, prompting for UCI moves, and running turn-taking under semaphores with full game logging
+\end{itemize}
+\vspace{0.37em}
+
+\projectentry
+  {Attitude Estimation on ARM Cortex-M4}
+  {Embedded C++, nRF52840, PlatformIO, I2C, Python}
+\begin{itemize}
+  \item Built modular firmware to stream 9-DoF IMU data over serial, running a complementary filter, Madgwick, and an implemented Kalman filter with gyro-bias estimation over identical sensor samples
+  \item Characterized angle random walk, bias instability, and rate random walk sensor noise via overlapping Allan deviation and applied hard and soft iron magnetometer calibration
+  \item Developed host-side tooling for reproducible data capture, live signal visualization, and side by side logging of the estimator outputs
+\end{itemize}
+
+\sectiontitle{Additional Courses}
+\vspace{0.65em}
+{\color{darktext}Introduction to Embedded Machine Learning, Edge Impulse (Coursera), Oct 2025\par}
+{\color{darktext}Optimizing Generative AI on Arm Processors, Arm (Coursera), Oct 2025\par}
+
+\sectiontitle{Publication}
+\vspace{0.65em}
+{\color{darktext}Seed Quantifying and Packaging Unit for Small-Scale Enterprises. In \textit{Futuristic Trends in Electronics \& Instrumentation Engineering}, IIP Series, March 2024. DOI: \href{https://doi.org/10.58532/V3BIEI3P7CH1}{10.58532/V3BIEI3P7CH1}\par}
+
+\end{document}

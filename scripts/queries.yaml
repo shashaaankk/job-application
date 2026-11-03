@@ -1,0 +1,107 @@
+# Query matrix - the compiled, machine-executed form of the user's
+# preferences. The collector executes this verbatim; tuning the
+# search means editing this file, never code. Recompiled only when
+# preferences change, always as a diff for Shashank's review.
+#
+# status: DRAFT, approved: false - the collector must refuse to run a
+# production sweep while unapproved. Verified facts are marked with the
+# date they were established; open items are marked DECISION or PENDING.
+#
+# The query carries ONLY: role keywords, location, freshness, seniority,
+# each in the portal's native form. Onsite, compensation (except where a
+# portal has a native band), language, and domains are applied
+# downstream, never here.
+
+version: 7
+approved: true          # flips to true only by Shashank
+compiled_from: "user preferences (job-application vault)"
+compiled_on: 2026-10-01   # v7: Stepstone reads its page's embedded state
+
+defaults:
+  freshness_hours: 24      # his window; a catch-up run passes a wider one explicitly
+
+locations:                 # 13 units; order = preference order (ranking metadata only)
+  europe:                  # country-level
+    - Germany
+    - Netherlands
+    - Sweden
+    - Finland
+    - Belgium
+    - Norway
+    - Denmark
+    - France
+    - Italy
+    - Switzerland
+  india:                   # city-level
+    - "Bengaluru, India"
+    - "Hyderabad, India"
+    - "Pune, India"
+
+portals:
+  linkedin:
+    verified: 2026-09-19   # spot-check 13/13 cells; parameters probed individually
+    serves: [europe, india]
+    url_template: "https://www.linkedin.com/jobs/search/?keywords={kw}&location={loc}&f_TPR=r{freshness_seconds}&f_E=2%2C3%2C4&sortBy=DD&start={offset}"
+    # The run reads the endpoint the search page itself calls, not the rendered
+    # list. Verified 2026-09-30: 25 typed records per page, every field present,
+    # paging.total as the claimed count. url_template above stays as the human
+    # link and is no longer what the collector fetches.
+    api_template: "https://www.linkedin.com/voyager/api/voyagerJobsDashJobCards?decorationId=com.linkedin.voyager.dash.deco.jobs.search.JobSearchCardsCollection-220&count={count}&q=jobSearch&query=(origin:JOB_SEARCH_PAGE_OTHER_ENTRY,keywords:{kw},locationUnion:(seoLocation:(location:{loc})),selectedFilters:(sortBy:List(DD),experience:List(2,3,4),timePostedRange:List(r{freshness_seconds})),spellCorrectionEnabled:true)&start={start}"
+    api_count: 25            # records per request, the value the page itself sends
+    notes:
+      - "keywords unquoted (quoted collapses recall, 3 vs 215 measured)"
+      - "f_E codes verified from the filter panel 2026-09-19: 2 Entry, 3 Associate, 4 Mid-Senior = under-5-years band"
+      - "api reader verified 2026-09-30: 0 missing fields in 25/25 records, exact posted_at, repostedJob flag"
+      - "~1000 results reachable per query; claimed at cap => OVERFLOW, cell not fully reachable (known hot cell: C++ Developer x Germany x 48 h)"
+  stepstone:
+    verified: 2026-09-18   # facet params read from the portal's own links, counts confirmed
+    serves: [Germany]
+    url_template: "https://www.stepstone.de/jobs/{kw_hyphen}/in-{place}?ag={age_facet}&page={page}"
+    age_facets: { 24h: age_1, week: age_7 }   # native freshness values; no 48 h form
+    place_names: { Germany: deutschland }     # the portal's own spelling; other places are slugged
+    # The reader takes the postings from the page's own embedded state, which
+    # carries datePosted as an exact timestamp. No endpoint exists to call.
+    state_global: "__PRELOADED_STATE__"
+    notes:
+      - "sparse queries padded with relaxed results in identical markup; filter to bounds downstream"
+      - "UNVERIFIED BY SHASHANK: with no 48 h facet the run sends ag=age_7, so a large share of"
+      - "  Stepstone rows are OUTSIDE the freshness preference by design. They are what Stepstone"
+      - "  served, not what the preferences asked for. Nothing filters them yet, so treat any"
+      - "  Stepstone row's age and location as unchecked until the after-fetch filter exists."
+  naukri:
+    verified: 2026-09-19   # 10/10 role-city cells returned lists; protocol pacing held twice
+    serves: [india]
+    url_template: "https://www.naukri.com/{kw_hyphen}-jobs-in-{city_hyphen}?jobAge={job_age}"
+    job_age_values: [1, 7]   # native values; 2 is accepted by the URL and silently ignored (2026-09-19)
+    # The reader navigates url_template and reads the response the page fetches
+    # for itself. A direct call to the endpoint is refused with HTTP 406
+    # "recaptcha required" because the page signs it with an nkparam header,
+    # so this is a response match and NOT a URL the collector requests.
+    api_response_match: "jobapi/v3/search"
+    notes:
+      - "headed only; one session; click-pagination via the Next control; 15-35 s jittered pacing; stop the cell on first anomaly, never retry into a flag"
+      - "jobAge native values only: 1 and 7 verified, 2 silently IGNORED (2026-09-19)"
+      - "DECISION pending (freshness): jobAge=1 daily runs vs jobAge=3 + downstream 48 h cut"
+      - "DECISION pending (seniority): experience=N verified as 'job range contains N'; which N, or downstream"
+      - "DECISION pending (salary): native bands are 15-25/25-50/50-75/75-100 Lakhs; 20-25 LPA is not native"
+      - "PENDING: native slugs for R&D Engineer and C++ Developer (mechanical slugs degrade to 'r d engineer' / 'c developer')"
+  indeed:
+    verified: false        # parked: Cloudflare challenges automated loads per session
+    serves: []
+    notes:
+      - "human-present runs only, or portal stays parked; challenges are never automated past"
+
+# Roles: `query` is the exact keyword string each portal receives.
+# Portal-native overrides go under `native:` per portal when discovered.
+# REVIEW REQUIRED by Shashank before approval.
+roles:
+  - { id: robotics-engineer,            query: Robotics Engineer }
+  - { id: embedded-software-engineer,   query: Embedded Software Engineer }
+  - { id: firmware-engineer,            query: Firmware Engineer }
+  - { id: embedded-physical-ai-engineer, query: Physical AI Engineer }
+  - { id: adas-automotive-software-engineer, query: ADAS Software Engineer }
+  - { id: rnd-engineer,                 query: R&D Engineer }      # PENDING naukri-native form
+  - { id: autonomous-systems-engineer,  query: Autonomous Systems Engineer }
+  - { id: cpp-developer,                query: C++ Developer }     # PENDING naukri-native form
+  - { id: automation-controls-engineer, query: Automation and Controls Engineer }
+  - { id: ai-ml-embedded-engineer,      query: AI ML Engineer Embedded }

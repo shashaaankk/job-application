@@ -1,0 +1,34 @@
+# Generated application artifacts (per-job resumes, cover letters, JDs, cards, reports)
+application artifacts/
+
+# Build output
+build/
+
+# Runtime data written by scripts (ledgers, logs, fetched descriptions, locks)
+scripts/data/
+
+# LaTeX intermediates and compiled PDFs in source folders
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+resume/*.pdf
+coverletter/*.pdf
+
+# Backups and purge snapshots
+.edit-backup-*/
+.purged-*/
+*.bak-*
+*.tar.gz
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Editor and Obsidian workspace state
+.obsidian/workspace.json
+.vscode/
