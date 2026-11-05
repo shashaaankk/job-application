@@ -32,3 +32,4 @@ __pycache__/
 # Editor and Obsidian workspace state
 .obsidian/workspace.json
 .vscode/
+skills/scoring/evals/*/last-answer.json

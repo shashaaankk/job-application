@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: robotics-demonstrator-tier-a
+expected_outcome: |
+  A robotics R&D demonstrator role in a preferred country, role and domain. The user has built and validated robots, so it is tier A.
+context:
+  scaffold_script: place-files.sh

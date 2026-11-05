@@ -6,7 +6,7 @@ description: Generate the CV for every card in the board's `to apply` column. A 
 # Artifact generation
 
 A card reaches the `to apply` column one of two ways. `scripts/score.py` moves it
-there when its alignment band is 2 or 3 and the preference match passed, inside his
+there when `skills/scoring` gives it tier A or B, which are bands 3 and 2, inside his
 three caps. Or he moves it there himself, which he may do with any card at any time.
 
 Either way the column is the decision and it was made before this skill runs. This
@@ -22,6 +22,8 @@ The script is the authority on what is work. It reports a card as `WORK` when th
 card sits in `to apply` and its `cv` or `coverletter` key is still empty, as `done`
 when both keys are filled, and as `BLOCKED` when the archived description is shorter
 than 200 characters.
+
+A card reported as `APPROVE` is waiting for him to tick its tailoring edits, per rule 83. It is not work, and the report lists it so he knows it is waiting.
 
 Never read the board yourself and never generate for a card the script did not list.
 A card he has not moved is not work, however good it looks.
@@ -91,7 +93,7 @@ variant is diffed instead.
 
 Write a cover letter in a scheduled or batch run. Letters are on request only.
 
-Write a score or a band onto a card. There is no scoring stage, and his reading is
-the score.
+Write a score, a band or a tier onto a card. Scoring belongs to `skills/scoring`,
+and his correction of a card goes through that skill.
 
 Submit, send or post anything. The pipeline produces documents and he applies.

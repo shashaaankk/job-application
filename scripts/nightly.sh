@@ -5,15 +5,16 @@
 # Nothing here needs an agent. It is the two Python entry points in order, so a run
 # produces the same cards whether or not anyone is watching.
 #
+#   0. retire_cards  clears `matched` and `to apply`, so each run starts fresh
 #   1. sweep.py      collects listings from LinkedIn, Stepstone and Naukri
 #   1b. recover_naukri hands Naukri recovery to Antigravity when the sweep's own
 #                    remedy did not clear the block
 #   2. make_cards.py checks the screen against his rulings, refuses to continue if
 #                    any ruling is broken, then screens and writes the cards
-#   3. score.py      scores every new card with Antigravity, five at a time, and
-#                    moves the ones that fire the document trigger into `to apply`
-#   4. prune_matched  clears `matched` of cards below the threshold and cards that
-#                    have aged out of the freshness window
+#   3. score.py      scores every new card per skills/scoring, five at a time, and
+#                    moves tier A and then tier B cards into `to apply`
+#   4. prune_matched  clears `matched` of knocked-out cards and cards that have aged
+#                    out of the freshness window. Tier C stays for him to read
 #
 # Scoring runs on Antigravity rather than Claude because a hundred cards costs about
 # 1.5 million Claude tokens and his plan is Pro. His three caps bind the move, so at
@@ -73,6 +74,31 @@ rm -f "$PROFILE/SingletonLock" "$PROFILE/SingletonCookie" "$PROFILE/SingletonSoc
 
 cd "$VAULT" || { say "FAIL vault not found"; exit 1; }
 
+# --- 0. clear the two working columns ---------------------------------------
+# His instruction. Every run starts with `matched` and `to apply` empty, so the
+# board he reads in the morning holds that run's findings and nothing older.
+# This runs before the sweep, never after, because after would erase the cards
+# the run had just written.
+#
+# Clearing goes through retire_cards.py, the only sanctioned removal. So card
+# files move to `.trash/<date>/` rather than being deleted, the ids go to
+# retired.tsv, and the applied, completed, rejected and user rejection columns
+# are refused by the tool itself. A posting cleared here does not return on the
+# next sweep, per rule 82, and `retire_cards.py --forget <id>` is the way back.
+#
+# A card he moved to `to apply` but has not had documents built for goes too.
+# That is what clearing every run means, and it is his call.
+say "=== board reset starting ==="
+rc_reset=0
+for col in matched "to apply"; do
+  say "clearing column '$col'"
+  "$PY" scripts/retire_cards.py --column "$col" || rc_reset=1
+done
+say "=== board reset finished, exit $rc_reset ==="
+if [ "$rc_reset" -ne 0 ]; then
+  say "WARNING the reset did not clear cleanly, continuing to the sweep"
+fi
+
 # --- 1. the sweep -----------------------------------------------------------
 say "=== sweep starting ==="
 "$PY" scripts/sweep.py
@@ -112,7 +138,7 @@ rc_score=$?
 say "=== score finished, exit $rc_score ==="
 
 # --- 4. clear what matched is done with -------------------------------------
-# Runs after scoring, so every card has had its band. Pruned cards go to
+# Runs after scoring, so every card has had its tier. Pruned cards go to
 # .trash/<date>/ and their ids to retired.tsv, so nothing is deleted and nothing
 # returns on the next sweep.
 say "=== prune starting ==="
@@ -124,7 +150,7 @@ say "=== prune finished, exit $rc_prune ==="
 board="$VAULT/01. job application tracker.md"
 matched=$(awk '/^## matched/,/^## to apply/' "$board" | grep -c '^- \[ \]')
 toapply=$(awk '/^## to apply/,/^## applied/' "$board" | grep -c '^- \[ \]')
-say "RESULT sweep $rc_sweep, naukri $rc_naukri, make_cards $rc_cards, score $rc_score, prune $rc_prune, matched $matched, to apply $toapply"
+say "RESULT reset $rc_reset, sweep $rc_sweep, naukri $rc_naukri, make_cards $rc_cards, score $rc_score, prune $rc_prune, matched $matched, to apply $toapply"
 ln -sf "$LOG" "$LOGDIR/latest.log"
 [ "$rc_cards" -eq 0 ] && [ "$rc_score" -eq 0 ] || exit 1
 exit 0

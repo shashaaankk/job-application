@@ -21,7 +21,7 @@ A cover letter answers three questions for a recruiter, why this company, why th
 4. `~/.claude/skills/human-voice/SKILL.md`, which describes the plain register the letter is written in.
 5. The accepted MOTOR Ai letter, `application artifacts/coverletters/sbm_motorai_15_10-coverletter.tex`, as an example of the register and of an opening that flows. Each letter takes its paragraphs from its own three answers.
 
-A card is optional.
+A card is optional. When there is one, its Evaluation holds the scorer's must-have table. Rows scored 3 are candidates for Done, rows scored 2 for Transfers, and rows scored 0 or 1 for Missing. Use it as the first draft of the Step 1 bridge map, never as the map itself, because Step 1 still reads every cv-ready note.
 
 ## Step 1. Map the bridge
 

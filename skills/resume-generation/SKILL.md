@@ -11,12 +11,14 @@ The base template is frozen. Almost nothing about a variant is a writing task, w
 
 ## Preconditions
 
-Two, and a miss on either one stops the run.
+Three, and a miss on any one stops the run.
 
 1. The card sits in the board's `to apply` column, which is his judgement that this posting is worth applying to. `scripts/pending.py` is the authority on that, and nothing else releases a card.
 2. The full job description is in the card's Job Description section. A stub, a truncated description or a prose pointer is a stop, per rule 1.
 
-There is no band and no run limit. The card's Evaluation section carries the screen's reading, which records what the title and the description named. It is not a grade and it is not a precondition.
+3. He has ticked at least one box under the card's "Tailoring edits for the user to approve" heading, per rule 83. `scripts/pending.py` reports an unticked card as APPROVE and it is not work.
+
+The card's Evaluation section carries the scorer's reading, written by `skills/scoring`.
 
 ## Step 1. Read the inputs
 
@@ -25,6 +27,7 @@ Read these and nothing else. Nothing outside them counts as evidence.
 | Input | What it gives |
 | --- | --- |
 | the card | the title, company, location, posting url and the archived description |
+| the card's Evaluation | the must-have table, which says what the work needs and which of his work answers it, and the tailoring edits, of which only the ticked ones may be applied |
 | [knowledge/](../../knowledge/) | the evidence, and only notes marked `cv-ready: true` may be cited |
 | [05. profile](../../05.%20profile.md) | the summary and the contact details |
 | `resume/sbm_de_26.tex` | the EU base |
@@ -52,7 +55,11 @@ Everything else is byte-identical to the base. No bullet rewording, no reorderin
 
 ## Step 4. Select the projects on evidence
 
-Read what the role actually needs from the description, meaning the disciplines, the responsibilities and the environment, rather than its word list. Then pick the projects whose work answers that need.
+Apply the ticked tailoring edits and nothing else. He approved those changes and no others, so an unticked edit is not applied, and no project, tagline or course line is changed on this run's own judgement. When "Use the base CV as it is" is ticked, the variant is a byte-identical copy of the base.
+
+The rules still win over a ticked edit. If one breaks rule 24 or any other rule, leave it out and say so in the report, so he can correct the card.
+
+If the ticked edits leave the page short of two, report it and stop rather than adding a project he did not approve.
 
 A term from the description enters only when the causal chain from something he did is written out, per rule 13. The keyword is not the qualification, the work is.
 

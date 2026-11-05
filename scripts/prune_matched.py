@@ -2,15 +2,16 @@
 
 Two kinds go, on his instruction.
 
-  below the threshold   band 0 or 1, or a preference match that rejected. These will
-                        never generate documents, so they are not waiting for
-                        anything.
+  knocked out           band 0, or a preference match that rejected. A knockout is
+                        the user's own hard preference or rule, so the card is
+                        not waiting for anything.
   older than the window matched.freshness_hours from the matrix. A card that has
                         aged out is no longer a live posting, whatever its band.
 
 Nothing else is touched. Other columns are never read, an unscored card is left
-alone because scoring has not had its say, and a band 2 or 3 card inside the window
-stays, since it is either on its way to `to apply` or held at one of his caps.
+alone because scoring has not had its say, and a tier A, B or C card inside the
+window stays. A and B are on their way to `to apply` or held at a cap. C stays so
+the user can read its reason and overrule it, per `skills/scoring`.
 
 Removal goes through `retire_cards.py`, so a pruned card is moved to `.trash/<date>/`
 rather than deleted and its id is written to `retired.tsv`, which stops the next
@@ -35,7 +36,7 @@ import score as S
 VAULT = Path(__file__).resolve().parent.parent
 CARDS = VAULT / "application artifacts" / "job cards"
 COLUMN = "matched"
-KEEP_BANDS = (2, 3)
+KEEP_BANDS = (1, 2, 3)            # tiers C, B and A
 
 
 def card_band(text):

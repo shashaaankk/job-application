@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: build-infrastructure-tier-b
+expected_outcome: |
+  A build, test and CI role. The user can do the work, but the role is only adjacent to the preferred roles and the domain is not revealed, so it is tier B and never tier A.
+context:
+  scaffold_script: place-files.sh

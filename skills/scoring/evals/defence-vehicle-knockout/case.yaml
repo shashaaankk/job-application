@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: defence-vehicle-knockout
+expected_outcome: |
+  The title reads as electric vehicles but the Dutch description is a defence vehicle systems role. Rule 11 puts European defence out of scope, so the posting is knocked out and gets no tier.
+context:
+  scaffold_script: place-files.sh

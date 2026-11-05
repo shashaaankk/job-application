@@ -22,6 +22,8 @@ import re
 import sys
 from pathlib import Path
 
+import score as S
+
 VAULT = Path(__file__).resolve().parent.parent
 BOARD = VAULT / "01. job application tracker.md"
 TRIGGER_COLUMN = "to apply"
@@ -67,6 +69,20 @@ def jd_of(text):
     return (m.group(1).strip() if m else "")
 
 
+def approved(text):
+    """True when the user ticked at least one box under the tailoring heading.
+
+    A card with no such heading, such as one the user moved in by hand, has nothing
+    to approve yet, so it waits too. Adding the heading with a ticked
+    "Use the base CV as it is" releases it unchanged.
+    """
+    head = S.APPROVAL_HEADING
+    if head not in text:
+        return False
+    block = text.split(head, 1)[1].split("\n#", 1)[0]
+    return bool(re.search(r"^- \[[xX]\] ", block, re.M))
+
+
 def inspect(rel):
     """One card's state. A card that cannot be read is a stop, never a skip."""
     p = VAULT / f"{rel}.md"
@@ -85,6 +101,8 @@ def inspect(rel):
         "cv": key(t, "cv"),
         "coverletter": key(t, "coverletter"),
         "jd_chars": len(jd),
+        # the scorer's tier, so tier A is generated first when the budget runs short
+        "tier": (re.search(r"^Score:.*?tier ([ABC])", t, re.M) or [None, "-"])[1],
     }
     # A card migrated from the old board carries the `old` tag and a different
     # structure, with no archived description. It is history rather than work, so
@@ -95,6 +113,9 @@ def inspect(rel):
         rec["state"], rec["why"] = "blocked", f"the description is {len(jd)} characters, rule 1"
     elif rec["cv"]:
         rec["state"] = "done"
+    elif not approved(t):
+        # Rule 83. The CV waits for the user's ticks on the card's tailoring edits.
+        rec["state"] = "approve"
     else:
         rec["state"] = "work"
         rec["needs"] = ["cv"]
@@ -111,6 +132,7 @@ def main():
 
     cards = [inspect(c) for c in column_cards(args.column)]
     work = [c for c in cards if c["state"] == "work"]
+    work.sort(key=lambda c: "ABC-".index(c["tier"]))
 
     if args.letters:
         none_yet = [c for c in cards
@@ -124,6 +146,7 @@ def main():
     if args.json:
         json.dump({"column": args.column, "work": work,
                    "done": [c for c in cards if c["state"] == "done"],
+                   "awaiting_approval": [c for c in cards if c["state"] == "approve"],
                    "blocked": [c for c in cards if c["state"] in ("blocked", "missing")],
                    "archived": sum(1 for c in cards if c["state"] == "archived")},
                   sys.stdout, indent=1)
@@ -131,10 +154,13 @@ def main():
         return 0
 
     print(f"column '{args.column}': {len(cards)} cards")
+    for c in work:
+        print(f"  WORK {c['tier']}   {c['company'][:26]:26s} {c['title'][:40]:40s} "
+              f"needs {', '.join(c['needs'])}")
     for c in cards:
-        if c["state"] == "work":
-            print(f"  WORK     {c['company'][:26]:26s} {c['title'][:40]:40s} "
-                  f"needs {', '.join(c['needs'])}")
+        if c["state"] == "approve":
+            print(f"  APPROVE  {c['company'][:26]:26s} {c['title'][:40]:40s} "
+                  f"tick its tailoring edits on the card")
     for c in cards:
         if c["state"] == "done":
             print(f"  done     {c['company'][:26]:26s} {c['title'][:40]}")

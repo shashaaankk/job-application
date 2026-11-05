@@ -60,6 +60,18 @@ def board_rows():
     return out
 
 
+def board_columns():
+    """Every column heading on the board, whether or not it holds a card.
+
+    The column list used to be derived from the rows, which made an empty column
+    invisible and had this tool refuse a column that simply had nothing in it. A
+    reset that runs on every run hits that on its second run, so the headings are
+    what the check reads.
+    """
+    return [l[3:].strip() for l in BOARD.read_text(encoding="utf-8").splitlines()
+            if l.startswith("## ")]
+
+
 CARDED = VAULT / "scripts" / "data" / "carded.tsv"
 
 
@@ -113,7 +125,7 @@ def main():
         raise SystemExit(f"'{args.column}' holds his applications, refusing")
 
     rows = board_rows()
-    cols = sorted({c for _, c, _ in rows if c})
+    cols = board_columns()
     if args.column and args.column not in cols:
         raise SystemExit(f"the board has no '{args.column}' column, it has {cols}")
 
