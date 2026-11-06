@@ -27,12 +27,19 @@ HOW TO READ THE USER'S RECORD
 4. Never invent experience. An agent caught lying loses the client the deal.
 
 THE SCORES
-Knockouts. Set preference_verdict to "reject" only when the posting breaks one of
-the user's HARD preferences or a rule in `06. rules.md` that puts it out of scope,
-and name the field or rule number in preference_detail. A posting that states it
-offers no visa sponsorship, or requires a language the record does not show at that
-level, is also a knockout. Anything unknown passes. Nothing the advertisement wishes
-for is a knockout.
+Knockouts. Set preference_verdict to "reject" only when the posting clearly breaks
+one of the user's HARD preferences or a rule in `06. rules.md` that puts it out of
+scope, and name the field or rule number in preference_detail. A posting that states
+it offers no visa sponsorship is also a knockout. Anything unknown passes. Nothing
+the advertisement wishes for is a knockout.
+
+A knockout throws away a posting the user never sees, so it must be certain. Before
+rejecting under a rule, read the whole rule, including any exception or waiver it
+carries, such as a waiver when the description names one of the user's own
+disciplines. Quote in preference_detail the words of the posting that break the rule,
+and quote why each waiver does not apply. If you cannot quote both, or the posting
+could be read either way, set "pass" and say in preference_detail which rule was
+close and why it did not apply.
 
 quick_scan, 0 to 3. A recruiter spends about seven seconds. They read the current
 and previous titles, the employers, the dates and the education, and look for the
